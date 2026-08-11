@@ -10,13 +10,13 @@ The main goal of this task was to understand the dataset structure, load the dat
 
 ### Main Tables
 
-- customers
-- orders
-- order_items
-- order_payments
-- products
-- sellers
-- geolocation
+* customers
+* orders
+* order_items
+* order_payments
+* products
+* sellers
+* geolocation
 
 ---
 
@@ -26,13 +26,13 @@ PostgreSQL was used as the relational database.
 
 The Olist dataset was loaded into the database, and the following seven tables were created successfully:
 
-- customers
-- geolocation
-- order_items
-- order_payments
-- orders
-- products
-- sellers
+* customers
+* geolocation
+* order_items
+* order_payments
+* orders
+* products
+* sellers
 
 The database was checked using PostgreSQL's `\dt` command to verify that the tables were created successfully.
 
@@ -44,22 +44,29 @@ The number of records in the `customers` table was checked:
 
 ```sql
 SELECT COUNT(*) FROM customers;
-Result: 99,441 records
+```
 
-Evidence: ../screenshots/02_customers_count.png
+**Result:** 99,441 records
 
-The number of records in the orders table was also checked:
+**Evidence:** `../screenshots/02_customers_count.png`
 
+The number of records in the `orders` table was also checked:
+
+```sql
 SELECT COUNT(*) FROM orders;
+```
 
-Result: 99,441 records
+**Result:** 99,441 records
 
-Evidence: ../screenshots/03_orders_count.png
+**Evidence:** `../screenshots/03_orders_count.png`
 
-3. Testing the Relationships
+---
 
-To verify that the relationship between the orders and customers tables was working correctly, a JOIN was performed using the customer_id field.
+## 3. Testing the Relationships
 
+To verify that the relationship between the `orders` and `customers` tables was working correctly, a JOIN was performed using the `customer_id` field.
+
+```sql
 SELECT
     o.order_id,
     o.customer_id,
@@ -68,26 +75,31 @@ FROM orders o
 JOIN customers c
     ON o.customer_id = c.customer_id
 LIMIT 10;
+```
 
 The query successfully returned matching records from both tables.
 
-Evidence: ../screenshots/04_orders_customers_join.png
+**Evidence:** `../screenshots/04_orders_customers_join.png`
 
 To further validate the relationship, the total number of matching records was checked:
 
+```sql
 SELECT COUNT(*)
 FROM orders o
 JOIN customers c
     ON o.customer_id = c.customer_id;
+```
 
-Result: 99,441 records
+**Result:** 99,441 records
 
-This confirms that all records in the orders table had a matching customer_id in the customers table.
+This confirms that all records in the `orders` table had a matching `customer_id` in the `customers` table.
 
-4. Conclusion
+---
+
+## 4. Conclusion
 
 The Olist dataset was successfully loaded into PostgreSQL.
 
-The database tables were verified, the data was validated using record counts, and the relationship between the orders and customers tables was successfully tested using SQL JOIN queries.
+The database tables were verified, the data was validated using record counts, and the relationship between the `orders` and `customers` tables was successfully tested using SQL JOIN queries.
 
 The database is ready for further analysis and future MLOps tasks.
