@@ -1,9 +1,18 @@
+import numpy as np
 from fastapi.testclient import TestClient
 
 from app.main import app
+import src.predict as predict_module
 
 
 client = TestClient(app)
+
+
+class FakeModel:
+    def predict_proba(self, features):
+        return np.array([
+            [0.3, 0.7]
+        ] * len(features))
 
 
 def get_payload():
@@ -47,7 +56,13 @@ def test_model_endpoint():
     assert result["model_type"] == "LogisticRegression"
 
 
-def test_predict_endpoint():
+def test_predict_endpoint(monkeypatch):
+    monkeypatch.setattr(
+        predict_module,
+        "load_model",
+        lambda: FakeModel()
+    )
+
     payload = get_payload()
 
     response = client.post("/predict", json=payload)
@@ -64,7 +79,13 @@ def test_predict_endpoint():
     assert result["predicted_late"] in [0, 1]
 
 
-def test_batch_predict_endpoint():
+def test_batch_predict_endpoint(monkeypatch):
+    monkeypatch.setattr(
+        predict_module,
+        "load_model",
+        lambda: FakeModel()
+    )
+
     payload = {
         "orders": [
             get_payload(),
@@ -96,6 +117,7 @@ def test_invalid_payload():
 
     assert response.status_code == 422
 
+
 def test_predict_rejects_negative_item_count():
     payload = get_payload()
     payload["item_count"] = -1
@@ -105,6 +127,7 @@ def test_predict_rejects_negative_item_count():
     assert response.status_code == 422
     assert "Great Expectations validation failed" in response.json()["detail"]
 
+
 def test_predict_rejects_invalid_numeric_type():
     payload = get_payload()
     payload["item_count"] = "two"
@@ -112,6 +135,7 @@ def test_predict_rejects_invalid_numeric_type():
     response = client.post("/predict", json=payload)
 
     assert response.status_code == 422
+
 
 def test_batch_predict_rejects_negative_item_count():
     payload = {

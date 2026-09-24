@@ -1,36 +1,58 @@
+import json
+import os
+from pathlib import Path
+
+import mlflow
+import mlflow.sklearn
 import pandas as pd
 
-from src.predict import predict
+from src.features import create_features
 
 
-def test_predict():
-    df = pd.DataFrame({
-        "order_purchase_timestamp": [
-            "2018-01-01 10:00:00"
-        ],
-        "order_estimated_delivery_date": [
-            "2018-01-05"
-        ],
-        "item_count": [2],
-        "total_items_price": [100.0],
-        "total_freight_value": [20.0],
-        "unique_products": [2],
-        "unique_sellers": [1],
-        "payment_count": [1],
-        "total_payment_value": [120.0],
-        "payment_types": [1],
-        "max_installments": [2],
-        "customer_zip_code_prefix": [12345],
-        "customer_city": ["Sao Paulo"],
-        "customer_state": ["SP"],
+BASE_DIR = Path(__file__).resolve().parent.parent
+CONFIG_PATH = BASE_DIR / "config" / "config.json"
+
+
+with open(CONFIG_PATH, "r") as f:
+    config = json.load(f)
+
+
+THRESHOLD = config["prediction"]["threshold"]
+MODEL_VERSION = config["model"]["version"]
+
+MLFLOW_TRACKING_URI = os.getenv(
+    "MLFLOW_TRACKING_URI",
+    config["mlflow"]["tracking_uri"]
+)
+MODEL_NAME = config["mlflow"]["model_name"]
+MODEL_ALIAS = config["mlflow"]["model_alias"]
+
+
+mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
+
+MODEL_URI = f"models:/{MODEL_NAME}@{MODEL_ALIAS}"
+
+model = None
+
+
+def load_model():
+    global model
+
+    if model is None:
+        model = mlflow.sklearn.load_model(MODEL_URI)
+
+    return model
+
+
+def predict(df: pd.DataFrame) -> pd.DataFrame:
+    features = create_features(df)
+
+    loaded_model = load_model()
+    probability = loaded_model.predict_proba(features)[:, 1]
+    prediction = (probability >= THRESHOLD).astype(int)
+
+    return pd.DataFrame({
+        "late_probability": probability,
+        "predicted_late": prediction,
+        "model_version": MODEL_VERSION
     })
-
-    result = predict(df)
-
-    assert "late_probability" in result.columns
-    assert "predicted_late" in result.columns
-
-    assert len(result) == 1
-
-    assert 0 <= result.loc[0, "late_probability"] <= 1
-    assert result.loc[0, "predicted_late"] in [0, 1]

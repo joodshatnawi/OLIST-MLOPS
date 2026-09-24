@@ -32,13 +32,22 @@ mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
 
 MODEL_URI = f"models:/{MODEL_NAME}@{MODEL_ALIAS}"
 
-model = mlflow.sklearn.load_model(MODEL_URI)
+model = None
 
+
+def load_model():
+    global model
+
+    if model is None:
+        model = mlflow.sklearn.load_model(MODEL_URI)
+
+    return model
 
 def predict(df: pd.DataFrame) -> pd.DataFrame:
     features = create_features(df)
 
-    probability = model.predict_proba(features)[:, 1]
+    loaded_model = load_model()
+    probability = loaded_model.predict_proba(features)[:, 1]    
     prediction = (probability >= THRESHOLD).astype(int)
 
     return pd.DataFrame({
