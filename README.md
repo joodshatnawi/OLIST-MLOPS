@@ -2,7 +2,7 @@
 
 An end-to-end MLOps project built as part of the **Qafza Tech MLOps Training**.
 
-The project takes an Olist Brazilian E-Commerce dataset and builds a production-oriented machine learning pipeline for predicting whether an order will be delivered late.
+The project uses the Olist Brazilian E-Commerce dataset to build a production-oriented machine learning pipeline for predicting whether an order will be delivered late.
 
 ## Project Overview
 
@@ -18,7 +18,7 @@ The final model is a **Logistic Regression** model with preprocessing and featur
 
 ```text
 olist-mlops/
-│
+
 ├── app/
 │   └── main.py                  # FastAPI application
 │
@@ -29,9 +29,9 @@ olist-mlops/
 │
 ├── artifacts/
 │   ├── eda/                     # EDA outputs
-│   ├── eda_plots/              # EDA visualizations
-│   ├── final_model.joblib.dvc  # DVC metadata for final model
-│   ├── final_test_results.csv  # Final evaluation metrics
+│   ├── eda_plots/               # EDA visualizations
+│   ├── final_model.joblib.dvc   # DVC metadata for final model
+│   ├── final_test_results.csv   # Final evaluation metrics
 │   ├── feature_config.json
 │   └── model_config.json
 │
@@ -44,11 +44,11 @@ olist-mlops/
 │   └── 06_final_evaluation.ipynb
 │
 ├── src/
-│   ├── features.py             # Feature engineering
-│   ├── validation.py           # Great Expectations validation
-│   ├── predict.py              # Model loading and prediction
-│   ├── logging_config.py       # Application logging
-│   └── mlflow_tracking.py      # MLflow experiment/model tracking
+│   ├── features.py              # Feature engineering
+│   ├── validation.py            # Great Expectations validation
+│   ├── predict.py               # Model loading and prediction
+│   ├── logging_config.py        # Application logging
+│   └── mlflow_tracking.py       # MLflow experiment/model tracking
 │
 ├── tests/
 │   ├── test_api.py
@@ -140,6 +140,7 @@ Useful commands:
 dvc status
 dvc add data
 dvc add artifacts/final_model.joblib
+```
 
 The DVC remote used during development is configured locally and is not committed as a machine-specific path.
 
@@ -177,14 +178,14 @@ The API loads the model through the MLflow Model Registry using the configured a
 
 ## Running the Project
 
-### 1. Clone the repository
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/joodshatnawi/OLIST-MLOPS.git
 cd OLIST-MLOPS
 ```
 
-### 2. Create the Python environment
+### 2. Create the Python Environment
 
 ```bash
 python -m venv .venv
@@ -196,7 +197,7 @@ Activate it on Windows:
 .venv\Scripts\Activate.ps1
 ```
 
-### 3. Install dependencies
+### 3. Install Dependencies
 
 ```bash
 pip install -r requirements-dev.txt
