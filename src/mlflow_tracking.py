@@ -47,6 +47,27 @@ def log_final_model():
         )
     )
 
+    client = mlflow.MlflowClient()
+
+    model_name = config["mlflow"]["model_name"]
+    model_alias = config["mlflow"]["model_alias"]
+
+    # Check whether the champion alias already exists
+    try:
+        client.get_model_version_by_alias(
+            name=model_name,
+            alias=model_alias
+        )
+        print(
+            f"Model '{model_name}' already has "
+            f"alias '{model_alias}'."
+        )
+        print("MLflow initialization skipped.")
+        return
+
+    except Exception:
+        pass
+
     mlflow.set_experiment("Olist Late Delivery")
 
     with mlflow.start_run(run_name="final_logistic_regression"):
@@ -81,38 +102,24 @@ def log_final_model():
         )
 
         run_id = mlflow.active_run().info.run_id
-
         model_uri = f"runs:/{run_id}/final_model"
 
         registered_model = mlflow.register_model(
             model_uri=model_uri,
-            name=config["mlflow"]["model_name"]
+            name=model_name
         )
 
-        client = mlflow.MlflowClient()
-
         client.set_registered_model_alias(
-            name=config["mlflow"]["model_name"],
-            alias=config["mlflow"]["model_alias"],
+            name=model_name,
+            alias=model_alias,
             version=registered_model.version
         )
 
         print("MLflow run completed successfully!")
         print("Metrics:", metrics)
-
-        print(
-            f"Registered model: "
-            f"{config['mlflow']['model_name']}"
-        )
-
-        print(
-            f"Version: {registered_model.version}"
-        )
-
-        print(
-            f"Alias: "
-            f"{config['mlflow']['model_alias']}"
-        )
+        print(f"Registered model: {model_name}")
+        print(f"Version: {registered_model.version}")
+        print(f"Alias: {model_alias}")
 
 
 if __name__ == "__main__":

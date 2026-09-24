@@ -17,6 +17,7 @@ services:
       timeout: 5s
       retries: 5
 
+
   mlflow:
     build:
       context: .
@@ -27,6 +28,17 @@ services:
         condition: service_healthy
     ports:
       - "5000:5000"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     volumes:
       - mlflow_artifacts:/mlartifacts
     command:
@@ -43,18 +55,36 @@ services:
       - --allowed-hosts
       - "localhost:*,127.0.0.1:*,mlflow:*"
 
+
+  mlflow-init:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: olist-mlflow-init
+    depends_on:
+      mlflow:
+        condition: service_healthy
+    environment:
+      MLFLOW_TRACKING_URI: http://mlflow:5000
+    command:
+      - python
+      - -m
+      - src.mlflow_tracking
+
+
   api:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: olist-api
     depends_on:
-      mlflow:
-        condition: service_started
+      mlflow-init:
+        condition: service_completed_successfully
     environment:
       MLFLOW_TRACKING_URI: http://mlflow:5000
     ports:
       - "8000:8000"
+
 
 volumes:
   postgres_data:
