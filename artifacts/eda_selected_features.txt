@@ -1,0 +1,28 @@
+Selected features:
+order_purchase_timestamp
+order_estimated_delivery_date
+item_count
+total_items_price
+total_freight_value
+unique_products
+unique_sellers
+payment_count
+total_payment_value
+payment_types
+max_installments
+customer_zip_code_prefix
+customer_city
+customer_state
+
+Excluded target:
+late
+
+Excluded IDs:
+order_id
+customer_id
+customer_unique_id
+
+Excluded post-outcome columns:
+order_delivered_customer_date
+order_delivered_carrier_date
+review_score

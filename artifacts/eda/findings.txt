@@ -1,0 +1,24 @@
+
+EDA Findings
+
+1. The target variable is imbalanced, with late orders representing
+   a minority class.
+
+2. Several numerical variables show skewness and potential outliers.
+   These should be handled or considered during feature engineering.
+
+3. Temporal variables show variation in late rates across purchase
+   periods, hours, and days of the week.
+
+4. Customer geography shows differences in late rates between states.
+
+5. The estimated delivery window provides information available at
+   prediction time and is selected as a modeling feature.
+
+6. Post-outcome variables such as delivery timestamps and review score
+   are excluded to avoid data leakage.
+
+7. ID columns are excluded because they identify individual records
+   rather than representing useful predictive information.
+
+8. The selected modeling features will be implemented in Notebook 5.

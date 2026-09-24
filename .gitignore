@@ -25,3 +25,14 @@ env/
 # OS
 .DS_Store
 Thumbs.db
+/data
+
+# Local MLflow
+mlruns/
+mlflow.db
+
+# Local DVC environment
+dvc-venv/
+
+# Runtime logs
+logs/

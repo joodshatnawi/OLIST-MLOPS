@@ -1,0 +1,61 @@
+
+Notebook 4 — Detailed EDA Findings
+
+Dataset
+-------
+Training rows: 77,180
+Training columns: 30
+Unique orders: 77,180
+
+Target
+------
+On-time orders: 70,374
+Late orders: 6,806
+Late rate: 8.82%
+
+Missing Values
+--------------
+Columns with missing values:
+                                dtype  missing  missing_pct  unique
+review_score                  float64      561         0.73      11
+order_approved_at              object       14         0.02   71511
+order_delivered_carrier_date   object        1         0.00   69164
+total_payment_value           float64        1         0.00   23139
+payment_types                 float64        1         0.00       2
+payment_count                 float64        1         0.00      19
+max_installments              float64        1         0.00      23
+
+Temporal
+--------
+Purchase date range:
+2016-09-15 12:16:38 -> 2018-05-26 16:54:05
+
+Estimated delivery days:
+Mean: 24.33
+Median: 23.50
+
+Leakage
+-------
+Excluded from modeling:
+- late
+- order_delivered_customer_date
+- order_delivered_carrier_date
+- review_score
+
+IDs
+---
+Excluded:
+- order_id
+- customer_id
+- customer_unique_id
+
+Modeling Direction
+------------------
+Selected raw features were chosen based on:
+- availability at prediction time
+- numerical/categorical usefulness
+- temporal information
+- estimated delivery window
+- customer geographic information
+
+The next notebook will perform feature engineering and preprocessing.

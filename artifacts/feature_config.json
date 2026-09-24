@@ -1,0 +1,42 @@
+{
+    "features": [
+        "estimated_delivery_days",
+        "item_count",
+        "total_items_price",
+        "total_freight_value",
+        "unique_products",
+        "unique_sellers",
+        "payment_count",
+        "total_payment_value",
+        "payment_types",
+        "max_installments",
+        "customer_zip_code_prefix",
+        "customer_city",
+        "customer_state",
+        "purchase_year",
+        "purchase_month",
+        "purchase_dayofweek",
+        "purchase_hour"
+    ],
+    "numeric_features": [
+        "estimated_delivery_days",
+        "item_count",
+        "total_items_price",
+        "total_freight_value",
+        "unique_products",
+        "unique_sellers",
+        "payment_count",
+        "total_payment_value",
+        "payment_types",
+        "max_installments",
+        "customer_zip_code_prefix",
+        "purchase_year",
+        "purchase_month",
+        "purchase_dayofweek",
+        "purchase_hour"
+    ],
+    "categorical_features": [
+        "customer_city",
+        "customer_state"
+    ]
+}
